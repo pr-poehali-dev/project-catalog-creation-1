@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
 
 const projects = [
   {
@@ -47,6 +48,13 @@ const projects = [
 ];
 
 const Index = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("Все");
+  const categories = ["Все", "Product Design", "Architecture", "Digital Art"];
+  
+  const filteredProjects = selectedCategory === "Все" 
+    ? projects 
+    : projects.filter(p => p.category === selectedCategory);
+
   return (
     <div className="min-h-screen bg-white">
       <header className="border-b border-neutral-200">
@@ -56,8 +64,23 @@ const Index = () => {
       </header>
 
       <main className="container mx-auto px-6 py-16">
+        <div className="flex flex-wrap gap-4 mb-12 justify-center">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-6 py-2 text-sm uppercase tracking-wider transition-all duration-300 ${
+                selectedCategory === category
+                  ? "text-black border-b-2 border-black"
+                  : "text-neutral-400 hover:text-neutral-600"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-          {projects.map((project, index) => (
+          {filteredProjects.map((project, index) => (
             <Link
               key={project.id}
               to={`/project/${project.id}`}
